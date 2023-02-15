@@ -8,7 +8,8 @@ import java.util.Scanner;
 
 public class GamePieceFactory {
 	public static GamePiece generate(int which) throws FileNotFoundException {
-		GamePiece piece = new GamePiece(Color.green);
+		Color color = Utils.rndColor();
+		GamePiece piece = new GamePiece();
 		Scanner s = new Scanner(new File("resources/" + which + ".txt"));
 		int pos = 0;
 		String line = "";
@@ -19,12 +20,11 @@ public class GamePieceFactory {
 			do // all lines of one piece
 			{
 				line = s.nextLine();
-				System.out.println(line);
 				int y = 0;
 				for (char c : line.toCharArray()) // all parts of a line
 				{
 					if (c == '#') {
-						part.add(new Position(x, y));
+						part.add(new Position(x, y, color));
 					}
 					y++;
 				}
