@@ -66,17 +66,41 @@ public class TetrisModel extends Observable implements ActionListener {
 		if (isOnFloor()) {
 			// put to lyingCells
 			lyingCells.addAll(piece.getPositions());
-			//TODO check for filled lines
-			
+			//check and remove filled lines
+			removeFullLines();
 			// new piece
 			piece = rndPiece();
 		}
 		notify("REDRAW");
 	}
 
+	private void removeFullLines()
+	{
+		int curr = BOARD_HEIGHT;
+		while (curr > 0)
+		{
+			if (isFilledLine(curr))
+			{
+				removeLine(curr);
+				curr = BOARD_HEIGHT; //start again at the bottom
+				
+			} else
+			{
+				curr--;
+			}
+		}
+	}
+	
 	private void removeLine(int y)
 	{
-		lyingCells = Utils.filter(p -> p.getY() == y, lyingCells);
+		lyingCells = Utils.filter(p -> p.getY() != y, lyingCells);
+		for (Position p : lyingCells)
+		{
+			if (p.getY() < y)
+			{
+				p.down();
+			}
+		}
 	}
 	
 	private boolean isFilledLine(int y)

@@ -37,6 +37,10 @@ public class Position {
 		return add(0, 1);
 	}
 
+	public void down()
+	{
+		y++;
+	}
 	
 	public Color getColor() {
 		return color;
