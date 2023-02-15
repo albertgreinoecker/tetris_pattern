@@ -1,6 +1,7 @@
 package tetris_pattern;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TetrisMessage {
 	enum ACTION {
@@ -9,9 +10,9 @@ public class TetrisMessage {
 
 	private ACTION action;
 	private GamePiece piece;
-	private ArrayList<Position> lyingCells;
+	private List<Position> lyingCells;
 
-	public TetrisMessage(ACTION action, GamePiece piece, ArrayList<Position> lyingCells) {
+	public TetrisMessage(ACTION action, GamePiece piece, List<Position> lyingCells) {
 		this.action = action;
 		this.piece = piece;
 		this.lyingCells = lyingCells;
@@ -25,7 +26,7 @@ public class TetrisMessage {
 		return piece;
 	}
 
-	public ArrayList<Position> getLyingCells() {
+	public List<Position> getLyingCells() {
 		return lyingCells;
 	}
 }

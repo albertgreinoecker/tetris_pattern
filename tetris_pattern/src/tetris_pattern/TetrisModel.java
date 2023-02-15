@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.Timer;
@@ -14,7 +15,7 @@ public class TetrisModel extends Observable implements ActionListener {
 	private final int PERIOD_INTERVAL = 500;
 	private final int NO_PIECES = 3;
 	private GamePiece piece = null; // the actual game piece
-	private ArrayList<Position> lyingCells = new ArrayList<>();
+	private List<Position> lyingCells = new ArrayList<>();
 
 	// all available pieces
 	private ArrayList<GamePiece> pieces = new ArrayList<>();
@@ -65,12 +66,29 @@ public class TetrisModel extends Observable implements ActionListener {
 		if (isOnFloor()) {
 			// put to lyingCells
 			lyingCells.addAll(piece.getPositions());
+			//TODO check for filled lines
+			
 			// new piece
 			piece = rndPiece();
 		}
 		notify("REDRAW");
 	}
 
+	private void removeLine(int y)
+	{
+		lyingCells = Utils.filter(p -> p.getY() == y, lyingCells);
+	}
+	
+	private boolean isFilledLine(int y)
+	{
+		int cnt = 0;
+		for (Position p : lyingCells)
+		{
+			if (y == p.getY()) cnt++;
+		}
+		return cnt == BOARD_WIDTH;
+	}
+	
 	private GamePiece rndPiece() {
 		int type = (int) (Math.random() * pieces.size()); // be aware of borders
 		return new GamePiece(pieces.get(type));
