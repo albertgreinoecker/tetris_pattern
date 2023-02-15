@@ -48,6 +48,8 @@ public class TetrisPanel extends JPanel implements Observer {
 		for (Position pos : poss) {
 			g.setColor(pos.getColor());
 			g.fillRect(CELL_SIZE * pos.getX(), CELL_SIZE * pos.getY(), CELL_SIZE, CELL_SIZE);
+			g.setColor(Color.black);
+			g.drawRect(CELL_SIZE * pos.getX(), CELL_SIZE * pos.getY(), CELL_SIZE, CELL_SIZE);
 		}
 	}
 }
