@@ -12,6 +12,7 @@ public class TetrisModel extends Observable implements ActionListener {
 	public static final int BOARD_WIDTH = 10;
 	public static final int BOARD_HEIGHT = 22;
 	private final int PERIOD_INTERVAL = 500;
+	private final int NO_PIECES = 3;
 	private GamePiece piece = null; // the actual game piece
 	private ArrayList<Position> lyingCells = new ArrayList<>();
 
@@ -24,7 +25,7 @@ public class TetrisModel extends Observable implements ActionListener {
 
 	private void init() {
 		try {
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < NO_PIECES; i++)
 				pieces.add(GamePieceFactory.generate(i));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -70,15 +71,14 @@ public class TetrisModel extends Observable implements ActionListener {
 		notify("REDRAW");
 	}
 
-	private GamePiece rndPiece()
-	{
-		int type = (int) (Math.random() * pieces.size()-2) + 1; //be aware of borders
+	private GamePiece rndPiece() {
+		int type = (int) (Math.random() * pieces.size()); // be aware of borders
 		return new GamePiece(pieces.get(type));
 	}
-	
+
 	private boolean isOnFloor() {
 		for (Position p : piece.getPositions()) {
-			if (p.getY() == BOARD_HEIGHT-1 || lyingCells.contains(p.onePosDown()))
+			if (p.getY() == BOARD_HEIGHT - 1 || lyingCells.contains(p.onePosDown()))
 				return true;
 		}
 		return false;

@@ -34,16 +34,18 @@ public class GamePiece {
 	}
 
 	public void down() {
-		if (yAbs < TetrisModel.BOARD_HEIGHT - 1)
+		if (yAbs < TetrisModel.BOARD_HEIGHT - 2) // if collides with down from timer
 			yAbs++;
 	}
 
 	public void left() {
-		xAbs--;
+		if (xAbs > 0)
+			xAbs--;
 	}
 
 	public void right() {
-		xAbs++;
+		if (xAbs < TetrisModel.BOARD_WIDTH - 2)
+			xAbs++;
 	}
 
 	public void changeOrientation() {
