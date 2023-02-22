@@ -1,6 +1,5 @@
 package tetris_pattern;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TetrisMessage {
