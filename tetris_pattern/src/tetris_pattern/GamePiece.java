@@ -49,7 +49,13 @@ public class GamePiece {
 	}
 
 	public void changeOrientation() {
-		orientation = (orientation + 1) % 4;
+		int newOrientation = (orientation + 1) % 4;
+		for (Position p : orientations.get(newOrientation))
+		{
+			if (xAbs + p.getX() < 0 || xAbs + p.getX() > TetrisModel.BOARD_WIDTH -1) return; //outside of board
+		}
+		
+		orientation = newOrientation;
 	}
 
 	public ArrayList<ArrayList<Position>> getOrientations() {
