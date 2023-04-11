@@ -14,7 +14,7 @@ public class GamePiece {
 
 	public GamePiece(GamePiece p) {
 		yAbs = 0;
-		xAbs = (int) (Math.random() * TetrisModel.BOARD_WIDTH);
+		xAbs = (int) (Math.random() * TetrisModel.BOARD_WIDTH - 3) + 2;
 		this.orientation = p.orientation;
 		this.orientations = p.orientations;
 	}
