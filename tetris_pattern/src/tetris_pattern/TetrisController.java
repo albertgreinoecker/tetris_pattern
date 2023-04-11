@@ -7,6 +7,12 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 
+/**
+ * Just handle key events of the game
+ * 
+ * @author albert
+ *
+ */
 public class TetrisController extends KeyAdapter implements ActionListener {
 
 	TetrisModel model;
@@ -21,7 +27,7 @@ public class TetrisController extends KeyAdapter implements ActionListener {
 			model.changeOrientation();
 			break;
 		case KeyEvent.VK_DOWN:
-			model.down();
+			model.fullDown();
 			break;
 		case KeyEvent.VK_LEFT:
 			model.left();

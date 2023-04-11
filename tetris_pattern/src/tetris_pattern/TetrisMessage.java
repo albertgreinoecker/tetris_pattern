@@ -2,9 +2,16 @@ package tetris_pattern;
 
 import java.util.List;
 
+/**
+ * Used for giving information to the Observer
+ * 
+ * @author albert
+ *
+ */
 public class TetrisMessage {
 	enum ACTION {
-		REDRAW
+		REDRAW,
+		GAMEOVER
 	};
 
 	private ACTION action;

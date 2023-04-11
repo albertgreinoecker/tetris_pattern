@@ -1,25 +1,23 @@
 package tetris_pattern;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.Timer;
-
-public class TetrisModel extends Observable implements ActionListener {
+public class TetrisModel extends Observable {
 	public static final int BOARD_WIDTH = 10;
 	public static final int BOARD_HEIGHT = 22;
-	private final int PERIOD_INTERVAL = 500;
+	private final long PERIOD_INTERVAL = 400;
 	private final int NO_PIECES = 3;
 	private GamePiece piece = null; // the actual game piece
 	private List<Position> lyingCells = new ArrayList<>();
-
+	private Timer timer; // used for periodically moving down
 	// all available pieces
 	private ArrayList<GamePiece> pieces = new ArrayList<>();
-
+	private boolean running = true;
 	public TetrisModel() {
 		init();
 	}
@@ -35,10 +33,16 @@ public class TetrisModel extends Observable implements ActionListener {
 	}
 
 	public void start() {
-		System.out.println("START");
-		Timer timer = new Timer(PERIOD_INTERVAL, this);
-		timer.setInitialDelay(10);
-		timer.start();
+		timer = new Timer();
+		TimerTask t = new TimerTask() {
+
+			@Override
+			public void run() {
+				gameStep(false);
+			}
+		};
+
+		timer.schedule(t, 10, PERIOD_INTERVAL);
 	}
 
 	public void changeOrientation() {
@@ -53,82 +57,90 @@ public class TetrisModel extends Observable implements ActionListener {
 		piece.right();
 	}
 
-	public void down() {
-		piece.down();
+	public void fullDown() {
+		gameStep(true);
 	}
 
 	/**
-	 * is used by the timer
+	 * @param full <b>false</b> one step down, <b>true</b>: move to the floor
 	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		down();
-		if (isOnFloor()) {
+	private synchronized void gameStep(boolean full) {
+		if (!running) return;
+		
+		if (full)
+			while (piece.down(lyingCells))
+				;
+		else
+			piece.down(lyingCells);
+
+		if (piece.isOnTop()) {
+			gameOver();
+		} else if (piece.isOnFloor(lyingCells)) {
 			// put to lyingCells
 			lyingCells.addAll(piece.getPositions());
-			//check and remove filled lines
+			// check and remove filled lines
 			removeFullLines();
 			// new piece
 			piece = rndPiece();
 		}
-		notify("REDRAW");
+		notify(TetrisMessage.ACTION.REDRAW);
 	}
 
-	private void removeFullLines()
-	{
+	/**
+	 * remove all existing full lines
+	 */
+	private void removeFullLines() {
 		int curr = BOARD_HEIGHT;
-		while (curr > 0)
-		{
-			if (isFilledLine(curr))
-			{
+		while (curr > 0) {
+			if (isFilledLine(curr)) {
 				removeLine(curr);
-				curr = BOARD_HEIGHT; //start again at the bottom
-				
-			} else
-			{
+				curr = BOARD_HEIGHT; // start again at the bottom
+
+			} else {
 				curr--;
 			}
 		}
 	}
-	
-	private void removeLine(int y)
-	{
+
+	/**
+	 * Remove line at a certain position
+	 * 
+	 * @param y the pos of the line to be removed
+	 */
+	private void removeLine(int y) {
 		lyingCells = Utils.filter(p -> p.getY() != y, lyingCells);
-		for (Position p : lyingCells)
-		{
-			if (p.getY() < y)
-			{
+		for (Position p : lyingCells) {
+			if (p.getY() < y) {
 				p.down();
 			}
 		}
 	}
-	
-	private boolean isFilledLine(int y)
-	{
+
+	private boolean isFilledLine(int y) {
 		int cnt = 0;
-		for (Position p : lyingCells)
-		{
-			if (y == p.getY()) cnt++;
+		for (Position p : lyingCells) {
+			if (y == p.getY())
+				cnt++;
 		}
 		return cnt == BOARD_WIDTH;
 	}
-	
+
 	private GamePiece rndPiece() {
-		int type = (int) (Math.random() * pieces.size()); // be aware of borders
+		int type = (int) (Math.random() * pieces.size());
 		return new GamePiece(pieces.get(type));
 	}
 
-	private boolean isOnFloor() {
-		for (Position p : piece.getPositions()) {
-			if (p.getY() == BOARD_HEIGHT - 1 || lyingCells.contains(p.onePosDown()))
-				return true;
-		}
-		return false;
+	private void gameOver() {
+		timer.cancel();
+		timer.purge();
+		running = false;
+		notify(TetrisMessage.ACTION.GAMEOVER);
+
 	}
 
-	private void notify(String action) {
+	private void notify(TetrisMessage.ACTION action) {
 		setChanged();
-		notifyObservers(new TetrisMessage(TetrisMessage.ACTION.REDRAW, piece, lyingCells));
+		notifyObservers(new TetrisMessage(action, piece, lyingCells));
 	}
 
 }

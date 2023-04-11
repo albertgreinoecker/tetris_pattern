@@ -2,6 +2,12 @@ package tetris_pattern;
 
 import java.awt.Color;
 
+/**
+ * Position of a cell including color - with some handy functions
+ * 
+ * @author albert
+ *
+ */
 public class Position {
 	private int x, y;
 	private Color color;
@@ -21,7 +27,6 @@ public class Position {
 	}
 
 	/**
-	 * 
 	 * @param absX x value to be added to the current x-value
 	 * @param absY y value to be added to the current y-value
 	 * @return a new Position instance
