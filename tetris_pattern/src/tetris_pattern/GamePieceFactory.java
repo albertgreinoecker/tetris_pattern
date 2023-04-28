@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GamePieceFactory {
+	
 	public static GamePiece generate(int which) throws FileNotFoundException {
 		Color color = Utils.rndColor();
 		GamePiece piece = new GamePiece();

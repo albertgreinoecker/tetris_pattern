@@ -18,6 +18,7 @@ public class TetrisModel extends Observable {
 	// all available pieces
 	private ArrayList<GamePiece> pieces = new ArrayList<>();
 	private boolean running = true;
+
 	public TetrisModel() {
 		init();
 	}
@@ -65,8 +66,9 @@ public class TetrisModel extends Observable {
 	 * @param full <b>false</b> one step down, <b>true</b>: move to the floor
 	 */
 	private synchronized void gameStep(boolean full) {
-		if (!running) return;
-		
+		if (!running)
+			return;
+
 		if (full)
 			while (piece.down(lyingCells))
 				;
@@ -139,8 +141,28 @@ public class TetrisModel extends Observable {
 	}
 
 	private void notify(TetrisMessage.ACTION action) {
+		System.out.println(this); //call toString every time
 		setChanged();
 		notifyObservers(new TetrisMessage(action, piece, lyingCells));
+	}
+
+	@Override
+	public String toString() {
+		ArrayList<Position> poss = piece.getPositions();
+		poss.addAll(lyingCells);
+		StringBuilder str = new StringBuilder();
+
+		for (int y = 0; y < BOARD_HEIGHT; y++) {
+			for (int x = 0; x < BOARD_WIDTH; x++) {
+				if (poss.contains(new Position(x, y))) {
+					str.append("X");
+				} else {
+					str.append("_");
+				}
+			}
+			str.append("\n");
+		}
+		return str.toString();
 	}
 
 }
