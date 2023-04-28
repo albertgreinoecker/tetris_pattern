@@ -110,7 +110,7 @@ public class TetrisModel extends Observable {
 	 * @param y the pos of the line to be removed
 	 */
 	private void removeLine(int y) {
-		lyingCells = Utils.filter(p -> p.getY() != y, lyingCells);
+		lyingCells.removeIf(p -> p.getY() == y);
 		for (Position p : lyingCells) {
 			if (p.getY() < y) {
 				p.down();

@@ -18,7 +18,7 @@ public class TetrisGUI extends JFrame {
 		setLayout(new BorderLayout());
 
 		game = new TetrisPanel(control, model);
-		// use this to get
+		// use this to center the play field
 		JPanel centerPanel = new JPanel(new GridBagLayout());
 		centerPanel.add(game);
 		centerPanel.setBackground(Color.BLACK);
