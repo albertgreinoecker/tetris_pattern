@@ -11,7 +11,7 @@ public class TetrisModel extends Observable {
 	public static final int BOARD_WIDTH = 10;
 	public static final int BOARD_HEIGHT = 22;
 	private final long PERIOD_INTERVAL = 400;
-	private final int NO_PIECES = 3;
+	private final int NO_PIECES = 4;
 	private GamePiece piece = null; // the actual game piece
 	private List<Position> lyingCells = new ArrayList<>();
 	private Timer timer; // used for periodically moving down
